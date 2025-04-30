@@ -1,0 +1,43 @@
+server:
+  port: 8081 # <-- ¡Asegúrate que sea 8081!
+
+spring:
+  application:
+    name: service-a # Nombre para Eureka
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_service_a?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: micro_user
+    password: micro_pass
+    driver-class-name: com.mysql.cj.jdbc.Driver # <-- Asegúrate que esta línea existe y es correcta
+  jpa:
+    hibernate:
+      ddl-auto: update # o create
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect # <-- Dialecto correcto
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+# Configuración de Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+        # ... (tu configuración de server, spring, eureka, management) ...
+
+logging:
+  level:
+    # Nivel TRACE para ver el mapeo de peticiones de Spring MVC
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+    # Puedes mantener DEBUG para otros componentes si ayuda
+    org.springframework.web: DEBUG
+    org.hibernate: DEBUG # Si quieres ver queries

@@ -1,0 +1,57 @@
+server:
+  port: 8080 # Puerto estándar para el Gateway
+
+spring:
+  application:
+    name: gateway-service # Es buena práctica darle un nombre
+  cloud:
+    gateway:
+      # discovery: # Deshabilitado por defecto si hay rutas explícitas, lo dejamos así
+      #  locator:
+      #    enabled: false # No necesitamos que cree rutas automáticamente por ahora
+      routes:
+        - id: service-a-route
+          uri: lb://SERVICE-A
+          predicates:
+            - Path=/api/products/**
+          filters:
+            # - RewritePath=/api/products/(?<segment>.*), /products/$\{segment} # Comentado/Eliminado
+            - StripPrefix=2 # <---- ¡ACTIVA ESTE!
+
+        # Ruta para Service B (Orders)
+        - id: service-b-route
+          uri: lb://SERVICE-B
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            # - RewritePath=/api/orders/(?<segment>.*), /orders/$\{segment} # Comentado/Eliminado
+            - StripPrefix=2 # <---- ¡ACTIVA ESTE!
+
+eureka:
+  client:
+    service-url:
+      # URL donde encontrar el servidor Eureka
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    # Preferir registrar la IP en lugar del hostname
+    prefer-ip-address: true
+    # Crear un ID de instancia único (útil si levantas varias instancias del gateway)
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+# Configuración de Actuator (para monitoreo y gestión)
+management:
+  endpoints:
+    web:
+      exposure:
+        # Exponer endpoints específicos: salud, info general y detalles del gateway
+        include: health,info,gateway
+
+# Configuración de Logging (para diagnóstico detallado del Gateway)
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty.http.client: DEBUG
+    # Puedes añadir otros paquetes si necesitas más detalle
+    # com.example.gatewayservice: DEBUG # Si tuvieras clases propias en el gateway
