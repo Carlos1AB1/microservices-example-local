@@ -15,17 +15,14 @@ spring:
           predicates:
             - Path=/api/products/**
           filters:
-            # - RewritePath=/api/products/(?<segment>.*), /products/$\{segment} # Comentado/Eliminado
-            - StripPrefix=2 # <---- ¡ACTIVA ESTE!
+            - StripPrefix=1 # Cambiar de 2 a 1 (para quitar solo el prefijo 'api')
 
-        # Ruta para Service B (Orders)
         - id: service-b-route
           uri: lb://SERVICE-B
           predicates:
             - Path=/api/orders/**
           filters:
-            # - RewritePath=/api/orders/(?<segment>.*), /orders/$\{segment} # Comentado/Eliminado
-            - StripPrefix=2 # <---- ¡ACTIVA ESTE!
+            - StripPrefix=1 # Cambiar de 2 a 1 (para quitar solo el prefijo 'api')
 
 eureka:
   client:
