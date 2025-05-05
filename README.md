@@ -11,6 +11,8 @@ Una demostración completa de arquitectura de microservicios utilizando Spring C
 
 Este proyecto demuestra una arquitectura de microservicios utilizando Spring Cloud. Consiste en un servidor Eureka para el descubrimiento de servicios, un API Gateway para el enrutamiento, y dos microservicios con sus propias bases de datos. El sistema está diseñado para mostrar cómo los servicios independientes pueden comunicarse y trabajar juntos en un entorno distribuido.
 
+![Diagrama de Arquitectura](https://www.mermaidchart.com/raw/7ae524d5-a4b7-40fe-b928-e7447820a3fe?theme=light&version=v0.1&format=svg)
+
 ## 🛠️ Tecnologías Utilizadas
 
 - **Spring Boot 3.2.0** - Framework para crear aplicaciones Spring fácilmente
